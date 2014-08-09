@@ -16,3 +16,7 @@ Optional: None
 
 Notes:
 N/A.
+
+
+Walkthrough of all the userstories:
+https://github.com/alaprisk/ToDo_App/blob/master/ToDoApp/Todo_at_work.gif
