@@ -9,5 +9,6 @@
     <string name="title_activity_edit_item">EditItemActivity</string>
     <string name="edit_button_label">Save</string>
     <string name="edit_item_text">Edit Item Below:</string>
+    <string name="edit_item_date">mm/dd/year</string>
 
 </resources>
