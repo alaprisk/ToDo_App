@@ -20,6 +20,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class TodoActivity extends Activity {
 
@@ -29,8 +30,8 @@ public class TodoActivity extends Activity {
 	private EditText etNewItem;
 	//private EditText etNewItemDate;
 	private final int REQUEST_CODE = 100;
-	//public ArrayList<User> arrayOfUsers;
-	//public UsersAdapter adapter;
+	public ArrayList<User> arrayOfUsers;
+	public CustomAdapter adapter;
 	
 	private MyAppDatabase dbHelper;
 	private SQLiteDatabase db;
@@ -38,40 +39,47 @@ public class TodoActivity extends Activity {
 	
 	private String[] dbitems;
 	
-	/*public class User {
+	public class User {
 	    public String todostring;
-	    public String duedate;
+	    public String priority;
 
-	    public User(String todostring, String duedate) {
-	       this.todostring = duedate;
-	       this.duedate = duedate;
+	    public User(String todostring, String priority) {
+	       this.todostring = todostring;
+	       this.priority = priority;
 	    }
 	}
 	
-	public class UsersAdapter extends ArrayAdapter<User> {
-	    public UsersAdapter(Context context, ArrayList<User> users) {
-	       super(context, R.layout.activity_todo, users);
-	    }
+	//Method to sort the list according to their priorities.
+	public void update_list()
+	{
+        Cursor c = db.rawQuery("select * from ToDoTable", dbitems);
+       		    
+                
+        int textcolumn = c.getColumnIndex("todotext");
+        int prioritycolumn = c.getColumnIndex("priority");
+        
+        while(c.moveToNext()) {   
+    	    Log.e("from onCreate : ",c.getString(prioritycolumn));
+    	    Log.e("from onCreate : ",c.getString(textcolumn));
 
-	    @Override
-	    public View getView(int position, View convertView, ViewGroup parent) {
-	       // Get the data item for this position
-	       User user = getItem(position);    
-	       // Check if an existing view is being reused, otherwise inflate the view
-	       if (convertView == null) {
-	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.activity_todo, parent, false);
-	       }
-	       // Lookup view for data population
-	       EditText et1 = (EditText) convertView.findViewById(R.id.etNewItem);
-	       //EditText et2 = (EditText) convertView.findViewById(R.id.etNewItemDate);
-	       // Populate the data into the template view using the data object
-	       et1.setText(user.todostring);
-	       //et2.setText(user.duedate);
-	       // Return the completed view to render on screen
-	       return convertView;
-	   }
+        	if(c.getString(prioritycolumn).startsWith("High"))
+        		items.add("*** "+c.getString(textcolumn)); 
+        }
+        c = db.rawQuery("select * from ToDoTable", dbitems);
+        while(c.moveToNext()) {
+        	if(c.getString(prioritycolumn).startsWith("Med"))
+        	{	
+        		items.add("**  "+c.getString(textcolumn));
+                //Toast.makeText(this,"item added as med", Toast.LENGTH_SHORT).show();       	 
+        	}
+        }
+        c = db.rawQuery("select * from ToDoTable", dbitems);
+        while(c.moveToNext()) {
+        	if(c.getString(prioritycolumn).startsWith("Low"))
+        		items.add("*   "+c.getString(textcolumn));
+        }
 	}
-	*/
+	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,27 +98,26 @@ public class TodoActivity extends Activity {
         lvItems.setAdapter(itemsAdapter);
         
         
-        /* Construct the data source
-        ArrayList<User> arrayOfUsers = new ArrayList<User>();
+        // Construct the data source
+        arrayOfUsers = new ArrayList<User>();
         // Create the adapter to convert the array to views
-        UsersAdapter adapter = new UsersAdapter(this, arrayOfUsers);
+        adapter = new CustomAdapter(this, arrayOfUsers);
         // Attach the adapter to a ListView
-        
-        //lvItems.setAdapter(adapter);
-        
+                
         
         // Add item to adapter
         User newUser = new User("Item testing", "");
-        adapter.add(newUser);*/      
+        adapter.add(newUser);
+        
+        //adapter.notifyDataSetChanged();
+        
+	    Log.e("from onCreate, done with creating user adapter","so far so good");
+        
         
         dbHelper = new MyAppDatabase(this);
         db = dbHelper.getWritableDatabase();
         
-        Cursor c = db.rawQuery("select * from ToDoTable", dbitems);
-       		
-        while(c.moveToNext()) {        	
-        	items.add(c.getString(0));
-        }
+        update_list();
         
         //Method to Remove contents from the list.   
         setupListViewListener();
@@ -128,7 +135,7 @@ public class TodoActivity extends Activity {
     				int position, long id) {
     			// TODO Auto-generated method stub
 				
-    			String tobedeleted = items.get(position);
+    			String tobedeleted = items.get(position).substring(4);
     			
     			items.remove(position);			
     			itemsAdapter.notifyDataSetChanged();
@@ -160,7 +167,18 @@ public class TodoActivity extends Activity {
 			
 				//First deleting the entry in database.
 				
+				String priority;
+				
+				//if(items.get(index))
+				
     			String tobedeleted = items.get(position);
+				
+    			if(tobedeleted.startsWith("*** "))priority = "High";
+    			else if(tobedeleted.startsWith("**  "))priority = "Med";
+    			else
+    				priority = "Low";
+    			
+				tobedeleted = tobedeleted.substring(4);
     						
     			String whereClause = "todotext"+"=?";
     			String[]whereArgs = new String[] {tobedeleted};
@@ -174,10 +192,10 @@ public class TodoActivity extends Activity {
            	       Log.e("ITEM_NOT_DELETED", tobedeleted);
            	 	}
     			
-				
 				 Intent i = new Intent( TodoActivity.this , EditItemActivity.class);
-				 i.putExtra("to_be_edited_item",items.get(position));
+				 i.putExtra("to_be_edited_item",items.get(position).substring(4));
 				 i.putExtra("position", position);
+				 i.putExtra("priorityincoming",priority);
 				 				 
 				 startActivityForResult(i, REQUEST_CODE); // brings up the EditItem Activity	
 			}
@@ -192,25 +210,49 @@ public class TodoActivity extends Activity {
          
     	 // Extract name value from result extras
          String name = data.getExtras().getString("newly_edited_text");
-         int pos = data.getExtras().getInt("position");
+         String priority = data.getExtras().getString("priority");
+      
+         if(priority.startsWith("High")) {
 
-         /*
-         // Toast the name to display temporarily on screen
-         Toast.makeText(this, name, Toast.LENGTH_SHORT).show();        
-         */
+             priority = "High";
+
+        	 
+             // Toast the name to display temporarily on screen
+             //Toast.makeText(this, "priority = high", Toast.LENGTH_SHORT).show();       	 
+         }
+         else if(priority.startsWith("Med")) {
+        	 //items.set(pos,"**  "+name);
+        	 priority = "Med";
+             // Toast the name to display temporarily on screen
+             //Toast.makeText(this, "priority = med", Toast.LENGTH_SHORT).show();  
+         }	 
+         else {
+        	 //items.set(pos,"*   "+name);  
+        	 priority = "Low";
+             // Toast the name to display temporarily on screen
+             //Toast.makeText(this, "priority = low", Toast.LENGTH_SHORT).show();  
+         }
          
-         items.set(pos, name);
-		 itemsAdapter.notifyDataSetChanged();
+         
 		 
      	//Adding items to database
          
      	ContentValues insertValues = new ContentValues();
      	insertValues.put("todotext",name );
+     	insertValues.put("priority", priority);
      	
      	try 
      	 {
-     		db.insert("ToDoTable", "todotext", insertValues);
+     		db.insert("ToDoTable", null, insertValues);
      		Log.e("ITEM_ADDED",name);
+     		
+     		
+     		items.clear();
+     		update_list();
+     		
+     		
+     		itemsAdapter.notifyDataSetChanged();
+     		
      	 }
      	 catch (Exception e) 
      	 {
@@ -225,13 +267,6 @@ public class TodoActivity extends Activity {
     	
     	if( !itemText.isEmpty() ) {
     		
-    		//Adding to ToDo only if the input string is not empty.
-    		itemsAdapter.add(itemText);
-    		
-    		// Add item to adapter
-            //User newUser = new User(itemText, "a");
-            //adapter.add(newUser);
-    		
     		
     		
         	etNewItem.setText("");
@@ -240,11 +275,17 @@ public class TodoActivity extends Activity {
             
         	ContentValues insertValues = new ContentValues();
         	insertValues.put("todotext",itemText );
+        	insertValues.put("priority", "Med");
         	
         	try 
         	 {
-        		db.insert("ToDoTable", "todotext", insertValues);
+        		db.insert("ToDoTable", null, insertValues);
         		Log.e("ITEM_ADDED",itemText);
+        		
+         		items.clear();
+         		update_list();
+         		itemsAdapter.notifyDataSetChanged();
+        		
         	 }
         	 catch (Exception e) 
         	 {
@@ -252,6 +293,10 @@ public class TodoActivity extends Activity {
         	 }
         	
         	
+    	}
+    	else {
+    		
+            Toast.makeText(this, "Task cannot be empty, please enter text", Toast.LENGTH_SHORT).show();
     	}
     }
     
@@ -277,7 +322,7 @@ public class TodoActivity extends Activity {
     
     public class MyAppDatabase extends SQLiteOpenHelper {
 
-    	private static final int DATABASE_VERSION = 16;
+    	private static final int DATABASE_VERSION = 35;
     	
 		public MyAppDatabase(Context context) {
 			super(context,"database.db" ,null, DATABASE_VERSION);
@@ -288,8 +333,13 @@ public class TodoActivity extends Activity {
 		public void onCreate(SQLiteDatabase db) {
 			// TODO Auto-generated method stub
 			
-			db.execSQL("CREATE TABLE ToDoTable ( todotext string)");
-			
+			try {
+			db.execSQL("CREATE TABLE ToDoTable ( todotext STRING , priority STRING)");
+			}
+			catch(Exception e)
+			{
+				Log.e("Unable to create Table : ", "ToDoTable");
+			}
 		}
 
 		@Override

@@ -3,16 +3,21 @@ package com.rishi.todoapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 //import android.widget.ListView;
 
 public class EditItemActivity extends Activity {
 
 	private EditText etOldItem;
 	private int position;
+	//private int priority;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +28,22 @@ public class EditItemActivity extends Activity {
         
         String to_be_edited_item = getIntent().getStringExtra("to_be_edited_item");
         position = getIntent().getIntExtra("position", 0);
-                
+        String priorityincoming = getIntent().getStringExtra("priorityincoming");
+        
+        RadioGroup rg = (RadioGroup)findViewById(R.id.radiogroup);
+        
+        RadioButton rbutton = (RadioButton)findViewById(R.id.radioButton1);
+        String rtext = (String)rbutton.getText();
+        if(rtext.startsWith(priorityincoming))rbutton.setChecked(true);
+        
+        rbutton = (RadioButton)findViewById(R.id.radioButton2);
+        rtext = (String)rbutton.getText();
+        if(rtext.startsWith(priorityincoming))rbutton.setChecked(true);
+        
+        rbutton = (RadioButton)findViewById(R.id.radioButton3);
+        rtext = (String)rbutton.getText();
+        if(rtext.startsWith(priorityincoming))rbutton.setChecked(true);           	
+        
         etOldItem.setText(to_be_edited_item.toString());
         etOldItem.setSelection(etOldItem.length());
         		
@@ -51,17 +71,33 @@ public class EditItemActivity extends Activity {
 	public void onSavingItem(View v) {
 	
     	String itemText = etOldItem.getText().toString();
-    	 
-    	// Prepare data intent 
-    	Intent data = new Intent();
+    	RadioGroup rg = (RadioGroup)findViewById(R.id.radiogroup);
+        int priority = rg.getCheckedRadioButtonId();
+        RadioButton rbutton = (RadioButton) rg.findViewById(priority);
+        Log.v("Selected Radiobutton : " + rbutton.getText(),"");
     	
-    	// Pass relevant data back as a result
-    	data.putExtra("newly_edited_text", itemText);
-    	data.putExtra("position",position);
     	
-    	// Activity finished ok, return the data
-    	setResult(RESULT_OK, data); // set result code and bundle data for response
-    	this.finish(); // closes the activity, pass data to parent
+    	if(!itemText.isEmpty())
+    	{
+    		// Prepare data intent 
+    		Intent data = new Intent();
+    	
+    		// Pass relevant data back as a result
+    		data.putExtra("newly_edited_text", itemText);
+    		data.putExtra("position",position);
+    		data.putExtra("priority", rbutton.getText());
+    		
+    	
+            //Toast.makeText(this, rbutton.getText(), Toast.LENGTH_LONG).show();
+    		// Activity finished ok, return the data
+    		setResult(RESULT_OK, data); // set result code and bundle data for response
+    		this.finish(); // closes the activity, pass data to parent
+    	}
+    	else {
+    		
+            Toast.makeText(this, "Task cannot be empty, please enter text", Toast.LENGTH_SHORT).show();
+    	}
+    	
 	
 	}
 	
