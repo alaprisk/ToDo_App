@@ -27,8 +27,10 @@ Notes:
 ---Implemented SQLite database to save the tasks & its priorities and made the Task list persistent.<br>
 
 Issues:<br>
-Started with Custom Array adapter as well, but facing some issues, will try to figure those out and upload the new code as soon as possible.<br>
+-Started with Custom Array adapter as well, but facing some issues, will try to figure those out and upload the new code as soon as possible.<br>
 
 Walkthrough of all the userstories:
 
 https://github.com/alaprisk/ToDo_App/blob/bgimage_sqlite_database_branch/ToDoApp/todo_taskpriority.gif
+
+-Background image looks very blur because of the quality of GIF, looks good on the emulator :) 
