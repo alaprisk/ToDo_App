@@ -18,6 +18,7 @@ public class EditItemActivity extends Activity {
 	private EditText etOldItem;
 	private int position;
 	//private int priority;
+	private EditText dueDate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +26,14 @@ public class EditItemActivity extends Activity {
 		setContentView(R.layout.activity_edit_item);
 		
         etOldItem = (EditText) findViewById(R.id.etOldItem);
+        dueDate = (EditText) findViewById(R.id.etDate);
         
         String to_be_edited_item = getIntent().getStringExtra("to_be_edited_item");
         position = getIntent().getIntExtra("position", 0);
         String priorityincoming = getIntent().getStringExtra("priorityincoming");
+        String date = getIntent().getStringExtra("date");
         
-        RadioGroup rg = (RadioGroup)findViewById(R.id.radiogroup);
+        //RadioGroup rg = (RadioGroup)findViewById(R.id.radiogroup);
         
         RadioButton rbutton = (RadioButton)findViewById(R.id.radioButton1);
         String rtext = (String)rbutton.getText();
@@ -46,6 +49,9 @@ public class EditItemActivity extends Activity {
         
         etOldItem.setText(to_be_edited_item.toString());
         etOldItem.setSelection(etOldItem.length());
+        
+        dueDate.setText(date);
+        dueDate.setSelection(4);
         		
 	}
 
@@ -71,13 +77,14 @@ public class EditItemActivity extends Activity {
 	public void onSavingItem(View v) {
 	
     	String itemText = etOldItem.getText().toString();
+    	String date = dueDate.getText().toString();
     	RadioGroup rg = (RadioGroup)findViewById(R.id.radiogroup);
         int priority = rg.getCheckedRadioButtonId();
         RadioButton rbutton = (RadioButton) rg.findViewById(priority);
         Log.v("Selected Radiobutton : " + rbutton.getText(),"");
     	
     	
-    	if(!itemText.isEmpty())
+    	if(!itemText.isEmpty() && !date.isEmpty())
     	{
     		// Prepare data intent 
     		Intent data = new Intent();
@@ -86,6 +93,7 @@ public class EditItemActivity extends Activity {
     		data.putExtra("newly_edited_text", itemText);
     		data.putExtra("position",position);
     		data.putExtra("priority", rbutton.getText());
+    		data.putExtra("date",date);
     		
     	
             //Toast.makeText(this, rbutton.getText(), Toast.LENGTH_LONG).show();
@@ -95,7 +103,7 @@ public class EditItemActivity extends Activity {
     	}
     	else {
     		
-            Toast.makeText(this, "Task cannot be empty, please enter text", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Fields cannot be empty, please enter text", Toast.LENGTH_SHORT).show();
     	}
     	
 	

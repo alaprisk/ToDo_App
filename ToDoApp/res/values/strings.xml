@@ -14,5 +14,8 @@
     <string name="Medium_priority">Med</string>
     <string name="Low_priority">Low</string>
     <string name="setPriority">Set Priority</string>
+    <string name="due_date">Date</string>
+    <string name="due_date_"></string>
+    <string name="Due_date_textView">Due By :</string>
 
 </resources>

@@ -3,12 +3,12 @@ package com.rishi.todoapp;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.rishi.todoapp.TodoActivity.User;
 
@@ -16,32 +16,38 @@ import com.rishi.todoapp.TodoActivity.User;
 	
 	public class CustomAdapter extends ArrayAdapter<User> {
 		
-		private final Context context;
+		//private final Context context;
 		
-	    public CustomAdapter(Context context, ArrayList<User> users) {
-	       super(context, 0, users);
-	       this.context = context;
+	    public CustomAdapter(Context context, int resource, ArrayList<User> users) {
+	       super(context, resource, users);
+	       //this.context = context;
 	    }
 
 	    @Override
 	    public View getView(int position, View convertView, ViewGroup parent) {
-	       // Get the data item for this position
+	       
+	    	// Get the data item for this position
 	       User user = getItem(position);    
 	       // Check if an existing view is being reused, otherwise inflate the view
 	       if (convertView == null) {
-		       Log.e("from getView, convertView = null","so far so good");
-	          convertView = LayoutInflater.from(getContext()).inflate(0, parent, false);
+		       //Log.e("from getView, convertView = null","so far so good");
+	          convertView = LayoutInflater.from(getContext()).inflate(R.layout.activity_todo_updatedlist, null);
 	       }
 	       // Lookup view for data population
-	       EditText et1 = (EditText) convertView.findViewById(R.id.etNewItem);
-	       //ListView lv = (ListView) convertView.findViewById(R.id.lvItems);
-	       
-	       //EditText et2 = (EditText) convertView.findViewById(R.id.etNewItemDate);
-	       
-	       Log.e("from getView, just about to return","so far so good");
+	       TextView tasktext = (TextView) convertView.findViewById(R.id.tasktext);
+	       TextView taskdate = (TextView) convertView.findViewById(R.id.taskdate);
+	       TextView taskpriority = (TextView) convertView.findViewById(R.id.taskpriority);
 	       
 	       // Populate the data into the template view using the data object
-	       et1.setText(user.todostring);
+	       tasktext.setText(user.todostring);
+	       taskdate.setText(user.date);
+	       taskpriority.setText(user.priority);
+	       
+	       if(user.priority.startsWith("High"))taskpriority.setTextColor(Color.RED);
+	       else if(user.priority.startsWith("Med"))taskpriority.setTextColor(Color.YELLOW);
+	       else
+	    	   taskpriority.setTextColor(Color.CYAN);
+	    	   
 	       //et2.setText(user.duedate);
 	       // Return the completed view to render on screen
 	       

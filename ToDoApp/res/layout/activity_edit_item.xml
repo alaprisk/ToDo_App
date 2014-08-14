@@ -17,6 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="72dp"
         android:ems="10"
+        android:gravity = "center"
         android:inputType="textMultiLine" >
 
         <requestFocus />
@@ -33,22 +34,12 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etOldItem"
-        android:layout_centerHorizontal="true"
-        android:text="@string/setPriority"
-        android:textAppearance="?android:attr/textAppearanceMedium" 
-        android:textColor="#FFFFFF" />
-
     <RadioGroup
         android:id="@+id/radiogroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_centerHorizontal="true" >
+        android:layout_alignRight="@+id/tvEditLabel"
+        android:layout_below="@+id/etDate" >
 
         <RadioButton
             android:id="@+id/radioButton1"
@@ -56,9 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginTop="22dp"
+            android:checked="true"
             android:text="@string/High_priority"
-                        android:checked="true"
-            
             android:textColor="#c00" />
 
         <RadioButton
@@ -73,17 +63,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Low_priority"
-            android:textColor="#690" />
+            android:textColor="#0F891B" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvDueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/radiogroup"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
+        android:text="@string/Due_date_textView"
+        android:textColor="#FFFFFF"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <EditText
+        android:id="@+id/etDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etOldItem"
+        android:layout_toRightOf="@+id/tvDueDate"
+        android:ems="10"
+        android:gravity="center"
+        android:text="@string/due_date"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/etOldItem"
+        android:layout_centerVertical="true"
+        android:text="@string/setPriority"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FFFFFF" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignRight="@+id/textView1"
         android:layout_below="@+id/radiogroup"
-        android:layout_marginTop="17dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
         android:onClick="onSavingItem"
         android:text="@string/edit_button_label" />
     
