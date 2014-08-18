@@ -5,18 +5,18 @@ Time spent for New Upload: 12 hours spent in total<br>
 
 Completed user stories:<br>
 
-<big>&#9745;</big>Required: Creating the Todo App<br>
-<big>&#9745;</big>Required: Adding an "Edit Feature"<br>
+<big>&#9745;</big> Required: Creating the Todo App<br>
+<big>&#9745;</big> Required: Adding an "Edit Feature"<br>
 
-Optional: Tweak the style of the app by adding a background, improve the UI & action bar.<br>
-Optional: Persist the todo app in SQLite instead of using a text file<br>
-Optional: Add support for priority for items<br>
-Optional: Sort the TaskList according to priorities.(Displayed in the order of High, Med, Low)<br>
-Optional: Empty tasks are not allowed to be added to the Task List.<br>
-Optional: Custom List View establishment to display additional attributes & stylizing the items<br>
-Optional: Added support for displaying completion due dates for items<br>
-Optional: Implemented AlertDialog to confirm the deletion of task.<br>
-Optional: Implemented Timer to remind User of the tasks pending for 'Today' & Snooze notification option using AlertDialog for High Priority task which is having deadline as 'Today'.
+<big>&#9745;</big> Optional: Tweak the style of the app by adding a background, improve the UI & action bar.<br>
+<big>&#9745;</big> Optional: Persist the todo app in SQLite instead of using a text file<br>
+<big>&#9745;</big> Optional: Add support for priority for items<br>
+<big>&#9745;</big> Optional: Sort the TaskList according to priorities.(Displayed in the order of High, Med, Low)<br>
+<big>&#9745;</big> Optional: Empty tasks are not allowed to be added to the Task List.<br>
+<big>&#9745;</big> Optional: Custom List View establishment to display additional attributes & stylizing the items<br>
+<big>&#9745;</big> Optional: Added support for displaying completion due dates for items<br>
+<big>&#9745;</big> Optional: Implemented AlertDialog to confirm the deletion of task.<br>
+<big>&#9745;</big> Optional: Implemented Timer to remind User of the tasks pending for 'Today' & Snooze notification option using AlertDialog for High Priority task which is having deadline as 'Today'.
 
 <br>
 Notes:<br>
