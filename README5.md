@@ -1,4 +1,3 @@
-&#9745;
 ToDo application extension to include background image change & making the application persistant using SQLite instead of using a text file. Also tasks having priorities, the list being sorted accordin to their priorities, the list now shows completion due dates.<br>
 
 Rishi Kanth Alapati.<br>
@@ -6,8 +5,8 @@ Time spent for New Upload: 12 hours spent in total<br>
 
 Completed user stories:<br>
 
-Required: Creating the Todo App<br>
-Required: Adding an "Edit Feature"<br>
+<span style="font-family: wingdings; font-size: 200%;">&#252;</span>Required: Creating the Todo App<br>
+<span style="font-family: wingdings; font-size: 200%;">&#252;</span>Required: Adding an "Edit Feature"<br>
 
 Optional: Tweak the style of the app by adding a background, improve the UI & action bar.<br>
 Optional: Persist the todo app in SQLite instead of using a text file<br>
@@ -17,8 +16,7 @@ Optional: Empty tasks are not allowed to be added to the Task List.<br>
 Optional: Custom List View establishment to display additional attributes & stylizing the items<br>
 Optional: Added support for displaying completion due dates for items<br>
 Optional: Implemented AlertDialog to confirm the deletion of task.<br>
-Optional: Implemented Timer to remind User of the tasks pending for 'Today' & Snooze notification option using AlertDialog<br>
-          for High Priority task which is having deadline as 'Today'.
+Optional: Implemented Timer to remind User of the tasks pending for 'Today' & Snooze notification option using AlertDialog for High Priority task which is having deadline as 'Today'.
 
 <br>
 Notes:<br>
