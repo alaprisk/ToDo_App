@@ -5,8 +5,8 @@ Time spent for New Upload: 12 hours spent in total<br>
 
 Completed user stories:<br>
 
-<span style="font-family: wingdings; font-size: 300%;">&#9745;</span>Required: Creating the Todo App<br>
-<span style="font-family: wingdings; font-size: 300%;">&#9745;</span>Required: Adding an "Edit Feature"<br>
+<big>&#9745;</big>Required: Creating the Todo App<br>
+<big>&#9745;</big>Required: Adding an "Edit Feature"<br>
 
 Optional: Tweak the style of the app by adding a background, improve the UI & action bar.<br>
 Optional: Persist the todo app in SQLite instead of using a text file<br>
