@@ -1,6 +1,6 @@
-ToDo application extension to include background image change & making the application persistant using SQLite instead of using a text file. Also tasks having priorities, the list being sorted accordin to their priorities, the list now shows completion due dates.<br>
+<big><b>ToDo<b></big> application extension to include background image change & making the application persistant using SQLite instead of using a text file. Also tasks having priorities, the list being sorted accordin to their priorities, the list now shows completion due dates.<br>
 
-Rishi Kanth Alapati.<br>
+---Rishi Kanth Alapati.<br>
 Time spent for New Upload: 12 hours spent in total<br>
 
 Completed user stories:<br>
@@ -23,7 +23,7 @@ Notes:<br>
 
 -TASKS in ToDo App can have any of 3 priorities : High, Med , Low.<br>
 -List is displayed in sorted order of priorities (High to Low)<br>
--Each task when created has a Due date to be the Next Day and Priority set to "Med", the user has to click & edit to change the text / modify due date / repriortize the task.
+-Each task when created has a Due date to be the "Next Day" and Priority set to "Med", the user has to click & edit to change the text / modify due date / repriortize the task.
 
 
 Issues:<br>
