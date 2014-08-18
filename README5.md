@@ -24,6 +24,7 @@ Notes:<br>
 -TASKS in ToDo App can have any of 3 priorities : High, Med , Low.<br>
 -List is displayed in sorted order of priorities (High to Low)<br>
 -Each task when created has a Due date to be the "Next Day" and Priority set to "Med", the user has to click & edit to change the text / modify due date / repriortize the task.
+-Though the Snooze time displayed in Alert Box is 1 Hour, its currently set to 30 seconds for the GIF demo purpose.
 
 
 Issues:<br>
