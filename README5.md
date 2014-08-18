@@ -1,3 +1,4 @@
+&#9745;
 ToDo application extension to include background image change & making the application persistant using SQLite instead of using a text file. Also tasks having priorities, the list being sorted accordin to their priorities, the list now shows completion due dates.<br>
 
 Rishi Kanth Alapati.<br>
