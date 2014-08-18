@@ -1,15 +1,19 @@
 package com.rishi.todoapp;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
@@ -42,7 +46,7 @@ public class TodoActivity extends Activity {
 	public class User {
 	    public String todostring;
 	    public String priority = "Med";
-	    public String date = Integer.toString(today.month+1) + ":" + Integer.toString(today.monthDay + 1) + ":" + Integer.toString(today.year);
+	    public String date = Integer.toString(today.month+1) + "/" + Integer.toString(today.monthDay + 1) + "/" + Integer.toString(today.year);
 
 	    public User(String todostring) {
 		       this.todostring = todostring;
@@ -60,7 +64,10 @@ public class TodoActivity extends Activity {
 	public void update_list()
 	{
         Cursor c = db.rawQuery("select * from ToDoTable", dbitems);
-       		 
+	    
+        today.setToNow(); 
+        int tasksForToday = 0;
+        int snoozed = 0;
                 
         int textcolumn = c.getColumnIndex("todotext");
         int prioritycolumn = c.getColumnIndex("priority");
@@ -71,6 +78,68 @@ public class TodoActivity extends Activity {
     	    Log.e("from onCreate : ",c.getString(textcolumn));
     	    Log.e("from onCreate : ",c.getString(datecolumn));*/
 
+        	StringTokenizer strTok = new StringTokenizer(c.getString(datecolumn),"/");
+        	String itemmonth = strTok.nextToken();
+        	String itemdate = strTok.nextToken();
+        	String itemyear = strTok.nextToken();
+        	//Log.e(itemmonth + " " + itemdate + " " + itemyear, "end");
+        	
+        	if(itemmonth.startsWith(Integer.toString(today.month+1)) && 
+        	   itemdate.startsWith(Integer.toString(today.monthDay))  &&
+        	   itemyear.startsWith(Integer.toString(today.year)) )
+        	{
+        		tasksForToday++;
+        		if(c.getString(prioritycolumn).startsWith("High"))
+        		{
+    				//Showing an Alert to ask for delete confirmation.
+               		
+               		AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+                    builder1.setMessage("You have a High Priority pending task");
+                    builder1.setCancelable(true);
+                    //builder1.setTitle("Reminder");
+                    builder1.setIcon(android.R.drawable.ic_dialog_alert);
+                    
+                    builder1.setPositiveButton("Snooze in 1 Hr",
+                            new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                                                   
+                            //Toast.makeText(TodoActivity.this, "about to delete the item", Toast.LENGTH_SHORT).show();       	 
+    		                
+                            new CountDownTimer(30000, 1000) {
+
+         						//public void onTick(long millisUntilFinished) {
+             						//mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+        						//}
+
+         						public void onFinish() {
+         							Toast.makeText(TodoActivity.this, "Reminder : You have a High Priority pending task for Today", Toast.LENGTH_LONG).show(); 
+         						}
+
+								@Override
+								public void onTick(long millisUntilFinished) {
+									// TODO Auto-generated method stub
+									
+								}
+     						}.start();
+                            
+                            dialog.cancel();                 
+                            
+                        }
+                    });
+                    builder1.setNegativeButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                    snoozed = 1;
+        		}	
+        	}//End of If - Same Day.
+        	
+        	
         	if(c.getString(prioritycolumn).startsWith("High"))
         	{	
         		//items.add("*** "+c.getString(textcolumn));
@@ -99,19 +168,27 @@ public class TodoActivity extends Activity {
                 adapter.notifyDataSetChanged();
         	}
         }
+        // Toast.makeText(this,Integer.toString(tasksForToday) + " Tasks remaining for Today # " + Integer.toString(today.month+1) + "/" + Integer.toString(today.monthDay) + "/" + Integer.toString(today.year), Toast.LENGTH_LONG).show();      		         
+       
+        if(tasksForToday > 0 && snoozed == 0)
+        	Toast.makeText(this,Integer.toString(tasksForToday) + " Tasks to be done by Today", Toast.LENGTH_LONG).show();      		         
+        //else
+        	//Toast.makeText(this,"No tasks have deadline for Today", Toast.LENGTH_LONG).show();      		         
+	
 	}
 	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        getActionBar().setTitle("ToDo");
+    	super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo);
         
         etNewItem = (EditText) findViewById(R.id.etNewItem);
         lvItems = (ListView) findViewById(R.id.lvItems);
 
 	    today.setToNow(); 
-        //Toast.makeText(this,"Today's Date : " + Integer.toString(today.month+1) + ":" + Integer.toString(today.monthDay + 1) + ":" + Integer.toString(today.year), Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Today's Date : " + Integer.toString(today.month+1) + "/" + Integer.toString(today.monthDay) + "/" + Integer.toString(today.year), Toast.LENGTH_SHORT).show();
 	    
 		items = new ArrayList<String>();        
         itemsAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,
@@ -126,25 +203,6 @@ public class TodoActivity extends Activity {
         adapter = new CustomAdapter(this, R.layout.activity_todo_updatedlist, arrayOfUsers);
         // Attach the adapter to a ListView
         lvItems.setAdapter(adapter);        
-        
-        /* Add item to adapter
-        User newUser1 = new User("Item testing 1","High", "8:15:2014");
-        User newUser2 = new User("Item testing 2");
-        User newUser3 = new User("Item testing 3","Low","8:20:2014");
-        
-        adapter.add(newUser1);
-        adapter.add(newUser2);
-        adapter.add(newUser3);*/
-        
-       // adapter.notifyDataSetChanged();
-        
-	   // Log.e("from onCreate, done with creating user adapter","so far so good");
-        
-	    //SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-	    //String currentDateandTime = sdf.format(new Date(REQUEST_CODE, REQUEST_CODE, REQUEST_CODE));
-	    
-	    
-	    
 	            
         dbHelper = new MyAppDatabase(this);
         db = dbHelper.getWritableDatabase();
@@ -211,32 +269,54 @@ public class TodoActivity extends Activity {
     		
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
+					final int position, long id) {
 				
-           		Log.e("hai bye","");
-
-				
-	           //Toast.makeText(TodoActivity.this, "from setupArrayListListener 2", Toast.LENGTH_LONG).show();       	 
-								
-    			User tobedeleted = arrayOfUsers.get(position);
-    			
-    			arrayOfUsers.remove(position);			
-    			adapter.notifyDataSetChanged();
-    			
-    			
-    			String whereClause = "todotext"+"=?";
-    			String[]whereArgs = new String[] {tobedeleted.todostring};
-    			
-    			try{
-    			db.delete("ToDoTable", whereClause, whereArgs);
-           		//Log.e("ITEM_DELETED from db",tobedeleted.todostring);
-           	 	}
-    			catch (Exception e) 
-    			{
-           	       Log.e("ITEM_NOT_DELETED", tobedeleted.todostring);
-           	 	}					
-				
+           		//Showing an Alert to ask for delete confirmation.
+           		
+           		AlertDialog.Builder builder1 = new AlertDialog.Builder(parent.getContext());
+                builder1.setMessage("Are you sure to delete the task?");
+                builder1.setCancelable(true);
+                //builder1.setTitle("Please Confirm");
+                builder1.setIcon(android.R.drawable.ic_dialog_alert);
+                
+                builder1.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        
+                        
+                        //Toast.makeText(TodoActivity.this, "about to delete the item", Toast.LENGTH_LONG).show();       	 
+						
+            			User tobedeleted = arrayOfUsers.get(position);
+            			
+            			arrayOfUsers.remove(position);			
+            			adapter.notifyDataSetChanged();
+            			
+            			
+            			String whereClause = "todotext"+"=?";
+            			String[]whereArgs = new String[] {tobedeleted.todostring};
+            			
+            			try{
+            			db.delete("ToDoTable", whereClause, whereArgs);
+                   		//Log.e("ITEM_DELETED from db",tobedeleted.todostring);
+                   	 	}
+            			catch (Exception e) 
+            			{
+                   	       Log.e("ITEM_NOT_DELETED", tobedeleted.todostring);
+                   	 	}					                
+                        
+                        dialog.cancel();                 
+                        
+                    }
+                });
+                builder1.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                
+                AlertDialog alert11 = builder1.create();
+                alert11.show();           						
 				return true;
 			}
     		
@@ -444,7 +524,7 @@ public class TodoActivity extends Activity {
      	try 
      	 {
      		db.insert("ToDoTable", null, insertValues);
-     		Log.e("ITEM_ADDED",name);
+     		//Log.e("ITEM_ADDED",name);
      		
      		
      		//items.clear();
@@ -488,12 +568,12 @@ public class TodoActivity extends Activity {
         	ContentValues insertValues = new ContentValues();
         	insertValues.put("todotext",itemText );
         	insertValues.put("priority", "Med");
-        	insertValues.put("date", Integer.toString(today.month+1) + ":" + Integer.toString(today.monthDay + 1) + ":" + Integer.toString(today.year));
+        	insertValues.put("date", Integer.toString(today.month+1) + "/" + Integer.toString(today.monthDay + 1) + "/" + Integer.toString(today.year));
         	
         	try 
         	 {
         		db.insert("ToDoTable", null, insertValues);
-        		Log.e("ITEM_ADDED to Db",itemText);
+        		//Log.e("ITEM_ADDED to Db",itemText);
         		
         		arrayOfUsers.clear();
         		adapter.notifyDataSetChanged();
@@ -539,7 +619,7 @@ public class TodoActivity extends Activity {
     
     public class MyAppDatabase extends SQLiteOpenHelper {
 
-    	private static final int DATABASE_VERSION = 47;
+    	private static final int DATABASE_VERSION = 50;
     	
 		public MyAppDatabase(Context context) {
 			super(context,"database.db" ,null, DATABASE_VERSION);

@@ -25,6 +25,8 @@ public class EditItemActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_item);
 		
+        getActionBar().setTitle("Updating the Task");
+		
         etOldItem = (EditText) findViewById(R.id.etOldItem);
         dueDate = (EditText) findViewById(R.id.etDate);
         
