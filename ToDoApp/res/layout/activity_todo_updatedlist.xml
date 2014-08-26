@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:clickable="false"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="vertical" >
+
+    <TableRow
+        android:id="@+id/TableRow01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true" >
+
+        <TextView
+        android:id="@+id/tasktext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:height="22dp"
+        android:textAppearance="@style/AppTheme"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="monospace" />
+
+        <TextView
+        android:id="@+id/taskpriority"
+        android:layout_width="10dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:height="14dp"
+        android:textColor="#c00"
+        android:textSize="12sp" />
+        
+    
+    </TableRow>
+
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+
+        
+        
+
+    <TextView
+        android:id="@+id/taskdate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="right"
+        android:height="13dp"
+        android:textColor="#EDEF88"
+        android:textSize="11sp" />
+    
+    </TableRow>
+
+</TableLayout>
