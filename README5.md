@@ -18,13 +18,6 @@ Completed user stories:<br>
 <big>&#9745;</big> Optional: Implemented AlertDialog to confirm the deletion of task.<br>
 <big>&#9745;</big> Optional: Implemented Timer to remind User of the tasks pending for 'Today' & Snooze notification option using AlertDialog for High Priority task which is having deadline as 'Today'.
 
-
-<ul class="task-list">
-<li class="task-list-item">
-<input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> Required: Creating the Todo App</li>
-</ul>
-
-
 <br>
 Notes:<br>
 
