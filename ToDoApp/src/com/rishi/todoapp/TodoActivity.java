@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Menu;
@@ -41,6 +42,8 @@ public class TodoActivity extends Activity {
 	private SQLiteDatabase db;
 	private String[] dbitems;
 	
+	AlertDialog alert11;
+	
     Time today = new Time(Time.getCurrentTimezone());
 	
 	public class User {
@@ -59,6 +62,9 @@ public class TodoActivity extends Activity {
 	    }
 	    
 	}
+	
+	
+	int snoozedForToday = 0 ;
 	
 	//Method to sort the list according to their priorities.
 	public void update_list()
@@ -86,7 +92,8 @@ public class TodoActivity extends Activity {
         	
         	if(itemmonth.startsWith(Integer.toString(today.month+1)) && 
         	   itemdate.startsWith(Integer.toString(today.monthDay))  &&
-        	   itemyear.startsWith(Integer.toString(today.year)) )
+        	   itemyear.startsWith(Integer.toString(today.year))  &&
+        	   (snoozedForToday == 0))
         	{
         		tasksForToday++;
         		if(c.getString(prioritycolumn).startsWith("High"))
@@ -94,8 +101,9 @@ public class TodoActivity extends Activity {
     				//Showing an Alert to ask for delete confirmation.
                		
                		AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                    builder1.setMessage("You have a High Priority pending task");
+                    builder1.setMessage("High Priority pending task for Today");
                     builder1.setCancelable(true);
+                    
                     //builder1.setTitle("Reminder");
                     builder1.setIcon(android.R.drawable.ic_dialog_alert);
                     
@@ -112,7 +120,9 @@ public class TodoActivity extends Activity {
         						//}
 
          						public void onFinish() {
-         							Toast.makeText(TodoActivity.this, "Reminder : You have a High Priority pending task for Today", Toast.LENGTH_LONG).show(); 
+         							//Toast.makeText(TodoActivity.this, "Reminder : You have a High Priority pending task for Today", Toast.LENGTH_LONG).show(); 
+         						
+         							alert11.show();
          						}
 
 								@Override
@@ -133,9 +143,12 @@ public class TodoActivity extends Activity {
                         }
                     });
 
-                    AlertDialog alert11 = builder1.create();
+                    
+                    //AlertDialog 
+                    alert11 = builder1.create();
                     alert11.show();
                     snoozed = 1;
+                    snoozedForToday = 1;
         		}	
         	}//End of If - Same Day.
         	
@@ -288,9 +301,53 @@ public class TodoActivity extends Activity {
 						
             			User tobedeleted = arrayOfUsers.get(position);
             			
-            			arrayOfUsers.remove(position);			
-            			adapter.notifyDataSetChanged();
+            			final User newuser;
             			
+            			if(tobedeleted.priority.startsWith("High")){
+            				newuser = new User("-c-o-m-p-l-e-t-e-d-","High",tobedeleted.date);
+            			}
+            			else if(tobedeleted.priority.startsWith("Med")){
+            				newuser = new User("-c-o-m-p-l-e-t-e-d-","Med",tobedeleted.date);
+            			}
+            			else {
+            				newuser = new User("-c-o-m-p-l-e-t-e-d-","Low",tobedeleted.date);
+            			}		
+                        //Toast.makeText(TodoActivity.this, "about to start handler", Toast.LENGTH_SHORT).show();       	 
+ 
+                   		//Log.e("Position before adding = ",Integer.toString(position));
+                   		//Log.e("Item about to delete ",tobedeleted.todostring);
+
+                   		
+            		    Handler handler = new Handler(); 
+            		    handler.postDelayed(new Runnable() { 
+            		         public void run() { 
+                                // Toast.makeText(TodoActivity.this, "middle of handler", Toast.LENGTH_SHORT).show(); 
+            		        	 
+                       			arrayOfUsers.remove(position);
+                    			adapter.notifyDataSetChanged();
+         
+                           		//Log.e("Position after deleting = ",Integer.toString(position));
+                           		//Log.e("Item after deleting = ",arrayOfUsers.get(position).todostring);
+
+                                 
+            		         } 
+            		    }, 1000);
+            			
+              			arrayOfUsers.remove(position);
+            			adapter.notifyDataSetChanged(); 
+            			
+                   		//Log.e("Position after removing before adding = ",Integer.toString(position));
+                   		//Log.e("Item after removing before adding = ",arrayOfUsers.get(position).todostring);
+            			
+                 		arrayOfUsers.add(position,newuser);                 		
+                 		adapter.notifyDataSetChanged();
+            			
+                   		//Log.e("Position after adding = ",Integer.toString(position));
+                   		//Log.e("Item after adding = ",arrayOfUsers.get(position).todostring);
+                   		
+            			//SystemClock.sleep(7000);
+                        
+                        //Toast.makeText(TodoActivity.this, "done with handler", Toast.LENGTH_SHORT).show();     	 
             			
             			String whereClause = "todotext"+"=?";
             			String[]whereArgs = new String[] {tobedeleted.todostring};
@@ -431,6 +488,8 @@ public class TodoActivity extends Activity {
       }
     } 
  	*/
+
+    
     private void setupOnClickListener() {
     	lvItems.setOnItemClickListener(new OnItemClickListener(){
 
@@ -478,18 +537,28 @@ public class TodoActivity extends Activity {
 			}
     		
     	});   
+    	
+    	etNewItem.setOnClickListener(null);
+    	
+    	
     }
 
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       // REQUEST_CODE is defined above
-      if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+
+ 		//Log.e("back from edit menu","from onActivityResult");
+
+    	if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
          
     	 // Extract name value from result extras
          String name = data.getExtras().getString("newly_edited_text");
          String priority = data.getExtras().getString("priority");
          String date = data.getExtras().getString("date");
+         
+  		//Log.e("done with extracting","from onActivityResult");
+
       
          if(priority.startsWith("High")) {
 
@@ -497,13 +566,13 @@ public class TodoActivity extends Activity {
 
         	 
              // Toast the name to display temporarily on screen
-             //Toast.makeText(this, "priority = high", Toast.LENGTH_SHORT).show();       	 
+            // Toast.makeText(this, "priority = high", Toast.LENGTH_SHORT).show();       	 
          }
          else if(priority.startsWith("Med")) {
         	 //items.set(pos,"**  "+name);
         	 priority = "Med";
              // Toast the name to display temporarily on screen
-             //Toast.makeText(this, "priority = med", Toast.LENGTH_SHORT).show();  
+            // Toast.makeText(this, "priority = med", Toast.LENGTH_SHORT).show();  
          }	 
          else {
         	 //items.set(pos,"*   "+name);  
@@ -524,7 +593,7 @@ public class TodoActivity extends Activity {
      	try 
      	 {
      		db.insert("ToDoTable", null, insertValues);
-     		//Log.e("ITEM_ADDED",name);
+     		Log.e("ITEM_ADDED",name);
      		
      		
      		//items.clear();
@@ -619,7 +688,7 @@ public class TodoActivity extends Activity {
     
     public class MyAppDatabase extends SQLiteOpenHelper {
 
-    	private static final int DATABASE_VERSION = 50;
+    	private static final int DATABASE_VERSION = 64;
     	
 		public MyAppDatabase(Context context) {
 			super(context,"database.db" ,null, DATABASE_VERSION);

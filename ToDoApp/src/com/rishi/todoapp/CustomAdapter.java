@@ -43,10 +43,18 @@ import com.rishi.todoapp.TodoActivity.User;
 	       taskdate.setText(user.date);
 	       taskpriority.setText(user.priority);
 	       
-	       if(user.priority.startsWith("High"))taskpriority.setTextColor(Color.RED);
-	       else if(user.priority.startsWith("Med"))taskpriority.setTextColor(Color.YELLOW);
-	       else
+	       if(user.priority.startsWith("High")){
+	    	   taskpriority.setTextColor(Color.RED);
+	    	   //tasktext.setTextColor(Color.RED);
+	       }
+	       else if(user.priority.startsWith("Med")){
+	    	   taskpriority.setTextColor(Color.YELLOW);
+	    	   //tasktext.setTextColor(Color.YELLOW);
+	       }
+	       else{
 	    	   taskpriority.setTextColor(Color.CYAN);
+	    	   //tasktext.setTextColor(Color.CYAN);
+	       }
 	    	   
 	       //et2.setText(user.duedate);
 	       // Return the completed view to render on screen

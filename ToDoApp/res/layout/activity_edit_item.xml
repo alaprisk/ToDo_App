@@ -23,17 +23,6 @@
         <requestFocus />
     </EditText>
 
-    <TextView
-        android:id="@+id/tvEditLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etOldItem"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="47dp"
-        android:text="@string/edit_item_text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#FFFFFF" />
-
     <RadioGroup
         android:id="@+id/radiogroup"
         android:layout_width="wrap_content"
@@ -107,5 +96,16 @@
         android:layout_marginTop="22dp"
         android:onClick="onSavingItem"
         android:text="@string/edit_button_label" />
+
+    <TextView
+        android:id="@+id/tvEditLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/edit_item_text"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFFFF" />
     
 </RelativeLayout>
